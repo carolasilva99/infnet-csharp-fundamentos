@@ -32,7 +32,7 @@ namespace GerenciadorAniversarios.Models
 
             // Se o aniversário já passou
             if (dataAniversario < DateTime.Now)
-                dataAniversario.AddYears(1);
+                dataAniversario = dataAniversario.AddYears(1);
 
             int diasParaAniversario = (dataAniversario - dataAtual).Days;
 
