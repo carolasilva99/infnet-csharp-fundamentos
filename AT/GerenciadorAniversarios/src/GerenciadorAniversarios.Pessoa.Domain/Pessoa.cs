@@ -1,66 +1,44 @@
-﻿using GerenciadorAniversarios.Core.DomainObjects;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
+using Newtonsoft.Json;
 
 namespace GerenciadorAniversarios.Pessoa.Domain
 {
-    public class Pessoa : Entity
+    public class Pessoa
     {
+        [JsonConverter(typeof(GuidConverter))]
+        public Guid Id { get; private set; }
         public string Nome { get; private set; }
         public string Sobrenome { get; private set; }
-        public DateTime DataNascimento { get; private set; }
+        public DateOnly DataNascimento { get; private set; }
 
-        public Pessoa(string nome, string sobrenome, DateTime dataNascimento)
+        public Pessoa(Guid id, string nome, string sobrenome, DateOnly dataNascimento)
         {
-            Nome = nome.Trim();
-            Sobrenome = sobrenome.Trim();
+            Id = id;
+            Nome = nome;
+            Sobrenome = sobrenome;
             DataNascimento = dataNascimento;
-
-            Validar();
         }
 
-        public string ObterNomeCompleto()
+        public string MontarNomeCompleto()
         {
             return $"{Nome} {Sobrenome}";
         }
-        
-        public bool NomeCompletoContem(string nome)
-        {
-            return ObterNomeCompleto().ToLower().Contains(nome.ToLower().Trim());
-        }
 
-        public void AlterarNome(string nome)
+        public int DiasParaProximoAniversario()
         {
-            Validacoes.ValidarSeVazio(nome, "O campo Nome da pessoa não pode estar vazio");
-            Nome = nome.Trim();
-        }
-
-        public void AlterarSobrenome(string sobrenome)
-        {
-            Validacoes.ValidarSeVazio(sobrenome, "O campo Sobrenome da pessoa não pode estar vazio");
-            Nome = sobrenome.Trim();
-        }
-
-        public void AlterarDataNascimento(DateTime dataNascimento)
-        {
-            DataNascimento = dataNascimento;
-        }
-
-        public int ObterDiasParaProximoAniversario()
-        {
-            DateTime dataAtual = DateTime.Today;
-            DateTime dataAniversario = DataNascimento.AddYears(dataAtual.Year - DataNascimento.Year);
+            var dataAtual = DateOnly.FromDateTime(DateTime.Now);
+            var dataAniversario = DataNascimento.AddYears(dataAtual.Year - DataNascimento.Year);
 
             // Se o aniversário já passou
-            if (dataAniversario < DateTime.Today)
+            if (dataAniversario < dataAtual)
                 dataAniversario = dataAniversario.AddYears(1);
 
-            int diasParaAniversario = (dataAniversario - dataAtual).Days;
+            var diasParaAniversario = dataAniversario.DayNumber - dataAtual.DayNumber;
 
             if (diasParaAniversario < 0)
                 diasParaAniversario *= -1;
@@ -68,22 +46,18 @@ namespace GerenciadorAniversarios.Pessoa.Domain
             return diasParaAniversario;
         }
 
-        public bool EAniversarianteHoje()
+        public bool NomeContem(string nome)
         {
-            return ObterDiasParaProximoAniversario() == 0;
-        }
+            var nomeCompleto = MontarNomeCompleto();
 
-        public void Validar()
-        {
-            Validacoes.ValidarSeVazio(Nome, "O campo Nome da pessoa não pode estar vazio");
-            Validacoes.ValidarSeVazio(Sobrenome, "O campo Sobrenome da pessoa não pode estar vazio");
+            return nomeCompleto.ToLowerInvariant().Contains(nome.Trim().ToLowerInvariant());
         }
 
         public override string ToString()
         {
-            return $"Nome completo: {ObterNomeCompleto()}\n" +
-                $"Data de nascimento: {DataNascimento.ToShortDateString()}\n" +
-                $"Faltam {ObterDiasParaProximoAniversario()} dias para o próximo aniversário";
+            return $"Nome: {MontarNomeCompleto()}\n" +
+                   $"Data de nascimento: {DataNascimento}\n" +
+                   $"Dias para o próximo aniversário: {DiasParaProximoAniversario()}";
         }
     }
 }

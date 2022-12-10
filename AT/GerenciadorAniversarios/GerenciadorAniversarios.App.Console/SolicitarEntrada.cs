@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GerenciadorAniversarios.Core.InteracaoUsuario
+namespace GerenciadorAniversarios.App.Console
 {
-    public class SolicitarEntradaUsuario
+    public class SolicitarEntrada
     {
         public static int SolicitarNumeroAoUsuario(string mensagem)
         {
@@ -15,8 +15,8 @@ namespace GerenciadorAniversarios.Core.InteracaoUsuario
 
             try
             {
-                Console.WriteLine(mensagem);
-                numero = Console.ReadLine() ?? string.Empty;
+                System.Console.WriteLine(mensagem);
+                numero = System.Console.ReadLine() ?? string.Empty;
                 int result = Int32.Parse(numero);
                 return result;
             }
@@ -32,8 +32,8 @@ namespace GerenciadorAniversarios.Core.InteracaoUsuario
 
             try
             {
-                Console.WriteLine(mensagem);
-                campo = Console.ReadLine() ?? string.Empty;
+                System.Console.WriteLine(mensagem);
+                campo = System.Console.ReadLine() ?? string.Empty;
 
                 return campo;
             }
@@ -43,16 +43,16 @@ namespace GerenciadorAniversarios.Core.InteracaoUsuario
             }
         }
 
-        public static DateTime SolicitarDataAoUsuario(string mensagem)
+        public static DateOnly SolicitarDataAoUsuario(string mensagem)
         {
             CultureInfo provider = CultureInfo.InvariantCulture;
             string dataString = string.Empty;
 
             try
             {
-                Console.WriteLine(mensagem);
-                dataString = Console.ReadLine() ?? string.Empty;
-                DateTime data = DateTime.ParseExact(dataString, "dd/MM/yyyy", provider);
+                System.Console.WriteLine(mensagem);
+                dataString = System.Console.ReadLine() ?? string.Empty;
+                DateOnly data = DateOnly.ParseExact(dataString, "dd/MM/yyyy", provider);
                 return data;
             }
             catch (Exception)

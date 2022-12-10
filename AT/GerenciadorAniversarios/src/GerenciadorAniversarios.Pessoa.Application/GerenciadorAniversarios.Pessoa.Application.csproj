@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\GerenciadorAniversarios.Pessoa.Data\GerenciadorAniversarios.Pessoa.Data.csproj" />
+    <ProjectReference Include="..\GerenciadorAniversarios.Pessoa.Domain\GerenciadorAniversarios.Pessoa.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
